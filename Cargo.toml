@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Solana Developer"]
 description = "솔라나 토큰 전송 봇"
+default-run = "solana_transfer_bot"
 
 [dependencies]
 solana-client = "1.17.0"

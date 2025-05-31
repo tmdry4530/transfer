@@ -11,13 +11,59 @@
 - 환경 변수를 통한 RPC URL 및 개인키 관리
 - RPC 서버 성능 벤치마크 도구
 
-## 설치 방법
+## 설치 및 실행 방법
 
-### 사전 요구사항
+### 방법 1: Docker로 실행 (추천)
+
+가장 쉬운 방법은 Docker를 사용하는 것입니다. Docker가 설치되어 있어야 합니다.
+
+1. 이미지 빌드 및 실행:
+
+```powershell
+# 이미지 빌드
+docker-compose build
+
+# 도움말 표시
+docker-compose run --rm solana-tools
+```
+
+2. 환경 변수 설정 방법:
+
+```powershell
+# 방법 1: 명령줄에서 직접 설정
+docker run -it --rm -e SOLANA_RPC_URL=https://your-rpc-url.com -e SOLANA_PRIVATE_KEY=your_private_key solana-tools transfer
+
+# 방법 2: .env 파일 사용
+# .env 파일 생성 후 docker-compose.yml이 있는 디렉토리에 저장
+docker-compose run --rm solana-tools transfer
+```
+
+3. 사용 가능한 명령어:
+
+```powershell
+# 모든 테스트 실행
+docker-compose run --rm solana-tools all
+
+# Ping 테스트만 실행
+docker-compose run --rm solana-tools ping
+
+# RPC API 벤치마크만 실행
+docker-compose run --rm solana-tools benchmark
+
+# 트랜잭션 테스트만 실행
+docker-compose run --rm solana-tools tx
+
+# 토큰 전송 기능 실행
+docker-compose run --rm solana-tools transfer
+```
+
+### 방법 2: 소스 코드에서 직접 빌드 및 실행
+
+#### 사전 요구사항
 
 - Rust 및 Cargo가 설치되어 있어야 합니다. [Rust 설치 방법](https://www.rust-lang.org/tools/install)
 
-### 빌드 및 실행
+#### 빌드 및 실행
 
 1. 저장소 클론
 
@@ -54,8 +100,18 @@ cargo build --release
 
 4. 실행
 
+프로젝트는 여러 실행 파일을 제공합니다. 필요한 도구를 지정하여 실행하세요:
+
 ```powershell
+# 토큰 전송 도구 실행 (기본 실행 파일)
 cargo run --release
+
+# 또는 특정 바이너리 지정하여 실행:
+cargo run --release --bin solana_transfer_bot  # 토큰 전송 도구
+cargo run --release --bin run_all_tests        # 모든 테스트 실행
+cargo run --release --bin ping_test            # Ping 테스트
+cargo run --release --bin rpc_benchmark        # RPC API 벤치마크
+cargo run --release --bin tx_speed_test        # 트랜잭션 속도 테스트
 ```
 
 ## 사용 방법
@@ -94,6 +150,22 @@ cargo run --release --bin tx_speed_test
 ```
 
 > 참고: 트랜잭션 테스트에는 소량의 SOL이 사용됩니다 (자기 자신에게 전송).
+
+### 모든 테스트 한번에 실행하기
+
+세 가지 테스트를 연속으로 실행하는 통합 도구도 제공합니다:
+
+```powershell
+cargo run --release --bin run_all_tests
+```
+
+이 명령어를 실행하면 다음 순서로 모든 테스트가 자동으로 실행됩니다:
+
+1. Ping 테스트 (네트워크 지연 시간)
+2. RPC API 벤치마크 (API 응답 시간)
+3. 트랜잭션 속도 테스트 (실제 거래 처리 시간)
+
+각 테스트 사이에 사용자 확인을 요청하므로 결과를 검토할 시간이 있습니다.
 
 ## 보안 참고사항
 
