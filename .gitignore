@@ -1,0 +1,19 @@
+# 환경 변수 파일
+.env
+
+# Rust 컴파일 결과물
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE 설정
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 운영체제 파일
+.DS_Store
+Thumbs.db 
+
+src/bin/
